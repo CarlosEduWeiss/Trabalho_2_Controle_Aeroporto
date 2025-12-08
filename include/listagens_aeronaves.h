@@ -1,4 +1,3 @@
-#include <linux/limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -12,9 +11,10 @@
 #include <stdio.h>
 
 void mostrar_dados_aeronaves(struct Aeronaves *aeronaves, FILE *fp);
-void lista_por_fabricante(Aeronaves_t *lista);
-void lista_por_modelo(Aeronaves_t *lista);
-void lista_por_ano(Aeronaves_t *lista);
-void lista_por_situacao(Aeronaves_t *lista);
+void listar_Aeronaves(struct Aeronaves *inicio_lista);
+void lista_por_fabricante(struct Aeronaves *lista);
+void lista_por_modelo(struct Aeronaves *lista);
+void lista_por_ano(struct Aeronaves *lista);
+void lista_por_situacao(struct Aeronaves *lista);
 
 #endif

@@ -1,7 +1,5 @@
 #include "../include/cadastros.h"
-//#include "../include/utils.h"
 #include "../include/utils.h"
-#include <linux/limits.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -19,100 +17,177 @@ void inicializar_base_rotas(struct bases_dados_rotas *rotas)
     rotas->contador = 0;
 }
 void inserir_aeronave_base_dados(struct base_dados_aeronave *aeronaves, struct Aeronaves *aeronave, int modo){
+    if(aeronave == NULL) return;
+    
+    aeronave->prox = NULL;
+    
     if(aeronaves->inicio == NULL){
         aeronaves->fim = aeronave;
         aeronaves->inicio = aeronave;
+    } else {
         if(modo == 1){
+            // Inserir no início
             aeronave->prox = aeronaves->inicio;
             aeronaves->inicio = aeronave;
         }
         else if(modo == 2){
+            // Inserir no fim
             aeronaves->fim->prox = aeronave;
             aeronaves->fim = aeronave;
-
         }
     }
+    aeronaves->contador++;
 }
-void inserir_rotas_base_dados(struct bases_dados_rotas *rotas, struct Rotas *rota, int modo);
+void inserir_rotas_base_dados(struct bases_dados_rotas *rotas, struct Rotas *rota, int modo){
+    if(rota == NULL) return;
+    
+    rota->prox = NULL;
+    
+    if(rotas->inicio == NULL){
+        rotas->fim = rota;
+        rotas->inicio = rota;
+    } else {
+        if(modo == 1){
+            // Inserir no início
+            rota->prox = rotas->inicio;
+            rotas->inicio = rota;
+        }
+        else if(modo == 2){
+            // Inserir no fim
+            rotas->fim->prox = rota;
+            rotas->fim = rota;
+        }
+    }
+    rotas->contador++;
+}
+
 struct Aeronaves *nova_aeronave(unsigned int *codigo){
     struct Aeronaves *novo_aviao = NULL;
 
-    novo_aviao = (struct Aeronaves* )malloc(sizeof(struct Aeronaves));
+    novo_aviao = (struct Aeronaves*)malloc(sizeof(struct Aeronaves));
+    if(novo_aviao == NULL) return NULL;
 
+
+    novo_aviao->id = *codigo;
     
-    printf("Digite a identificacao da aeronave.\n");
+    printf("Digite a identificacao da aeronave: ");
     getchar();
-    fgets(novo_aviao->indentificacao,TAMANHO,stdin);
+    fgets(novo_aviao->indentificacao, TAMANHO, stdin);
     remover_enter(novo_aviao->indentificacao);
-    //todo fgets do codigo tera um remover enter no codigo/ para que nao deixe nenhum /n perdido
-    
 
-    printf("Digite o modelo da aeronave\n");
-    fgets(novo_aviao->modelo, TAMANHO, stdin);
-    getchar();
-    fgets(novo_aviao->indentificacao,TAMANHO,stdin);
-    remover_enter(novo_aviao->indentificacao);
-    //todo fgets do codigo tera um remover enter no codigo/ para que nao deixe nenhum /n perdido
-    
-
-    printf("Digite o modelo da aeronave\n");
+    printf("Digite o modelo da aeronave: ");
     fgets(novo_aviao->modelo, TAMANHO, stdin);
     remover_enter(novo_aviao->modelo);
 
-    
-
-    printf("Fabricante da aeronave\n");
+    printf("Digite o fabricante da aeronave: ");
     fgets(novo_aviao->fabricante, TAMANHO, stdin);
     remover_enter(novo_aviao->fabricante);
 
-
-    printf("Matricula da aeronave\n");
+    printf("Digite a matricula da aeronave: ");
     fgets(novo_aviao->matricula, TAMANHO, stdin);
     remover_enter(novo_aviao->matricula);
 
-    
-
-    printf("Ano de fabricacao\n");
+    printf("Digite o ano de fabricacao: ");
     scanf("%i", &novo_aviao->ano_de_fabricacao);
     getchar();
 
-    
+    printf("Digite o numero de passageiros: ");
+    scanf("%i", &novo_aviao->numero_de_passageiros);
+    getchar();
 
-    printf("Digite (p) para aeronave do tipo passageiro/ digite (c) para aeronave de carga\n");
+    printf("Digite (p) para aeronave do tipo passageiro ou (c) para aeronave de carga: ");
     scanf("%c", &novo_aviao->tipo);
     getchar();
 
-
-    printf("Digite a situacao da aeronave, digite (o) para operante e (m) para manuntencao\n");
+    printf("Digite a situacao da aeronave, (o) para operante e (m) para manutencao: ");
     scanf("%c", &novo_aviao->situacao);
     getchar();
 
-    
-
-    printf("Fabricante da aeronave\n");
-    fgets(novo_aviao->fabricante, TAMANHO, stdin);
-    remover_enter(novo_aviao->fabricante);
-
-
-    printf("Matricula da aeronave\n");
-    fgets(novo_aviao->matricula, TAMANHO, stdin);
-    remover_enter(novo_aviao->matricula);
-
-    
-
-    printf("Ano de fabricacao\n");
-    scanf("%i", &novo_aviao->ano_de_fabricacao);
+    printf("Digite o numero de pilotos: ");
+    scanf("%i", &novo_aviao->tripulacao.piloto);
     getchar();
 
+    printf("Digite o numero de copilotos: ");
+    scanf("%i", &novo_aviao->tripulacao.copiloto);
+    getchar();
+
+    printf("Digite o numero de comissarias: ");
+    scanf("%i", &novo_aviao->tripulacao.comissaria);
+    getchar();
+
+    novo_aviao->prox = NULL;
     
-
-    printf("Digite (p) para aeronave do tipo passageiro/ digite (c) para aeronave de carga\n");
-    scanf("%c", &novo_aviao->tipo);
-    getchar();
-
-
-    printf("Digite a situacao da aeronave, digite (o) para operante e (m) para manuntencao\n");
-    scanf("%c", &novo_aviao->situacao);
-    getchar();
+    return novo_aviao;
 }
-struct Rotas *nova_rota(unsigned int *codigo);
+
+struct Rotas *nova_rota(unsigned int *codigo){
+    struct Rotas *nova_rota = NULL;
+
+    nova_rota = (struct Rotas*)malloc(sizeof(struct Rotas));
+    if(nova_rota == NULL) return NULL;
+
+    (*codigo)++;
+    nova_rota->codigo = *codigo;
+    
+    printf("Digite o dia da rota: ");
+    scanf("%u", &nova_rota->data.dia);
+    getchar();
+
+    printf("Digite o mes da rota: ");
+    scanf("%u", &nova_rota->data.mes);
+    getchar();
+
+    printf("Digite o ano da rota: ");
+    scanf("%u", &nova_rota->data.ano);
+    getchar();
+
+    printf("Digite a hora de partida (horas): ");
+    scanf("%u", &nova_rota->hora.horas);
+    getchar();
+
+    printf("Digite a hora de partida (minutos): ");
+    scanf("%u", &nova_rota->hora.minutos);
+    getchar();
+
+    printf("Digite o local de partida: ");
+    getchar();
+    fgets(nova_rota->localDePartida, TAMANHO, stdin);
+    remover_enter(nova_rota->localDePartida);
+
+    printf("Digite o local de destino: ");
+    fgets(nova_rota->localDeDestino, TAMANHO, stdin);
+    remover_enter(nova_rota->localDeDestino);
+
+    printf("Digite o combustivel necessario: ");
+    scanf("%f", &nova_rota->combustivel_necessario);
+    getchar();
+
+    printf("Digite a quantidade de passageiros: ");
+    scanf("%i", &nova_rota->qtd_passageiros);
+    getchar();
+
+    printf("Digite a quantidade de cargas: ");
+    scanf("%i", &nova_rota->qtd_cargas);
+    getchar();
+
+    printf("Digite o codigo da aeronave alocada: ");
+    scanf("%i", &nova_rota->Aeronave_alocada);
+    getchar();
+
+    printf("Digite o nome do piloto: ");
+    getchar();
+    fgets(nova_rota->nome_piloto, TAMANHO, stdin);
+    remover_enter(nova_rota->nome_piloto);
+
+    printf("Digite o nome do copiloto: ");
+    fgets(nova_rota->nome_copiloto, TAMANHO, stdin);
+    remover_enter(nova_rota->nome_copiloto);
+
+    printf("Digite o nome do comissario: ");
+    fgets(nova_rota->nome_comissario, TAMANHO, stdin);
+    remover_enter(nova_rota->nome_comissario);
+
+    nova_rota->prox = NULL;
+    
+    return nova_rota;
+}

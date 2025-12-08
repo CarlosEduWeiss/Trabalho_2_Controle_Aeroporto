@@ -1,7 +1,9 @@
 
-
 #include "../include/listagens_aeronaves.h"
 #include "../include/types.h"
+#include "../include/utils.h"
+#include <stdio.h>
+#include <string.h>
 
 void listar_Aeronaves(struct Aeronaves *inicio_lista)
 {
@@ -13,23 +15,122 @@ void listar_Aeronaves(struct Aeronaves *inicio_lista)
 }
 
 void mostrar_dados_aeronaves(struct Aeronaves *aeronaves, FILE *fp){
-    fprintf(fp, "indentificacao................: %s\n", aeronaves->indentificacao);
-    fprintf(fp, "modelo.......: %s\n", aeronaves->modelo);
-    fprintf(fp, "fabricante.................: %s\n", aeronaves->fabricante);
-    fprintf(fp, "matricula...: %s\n\n", aeronaves->matricula);
-    fprintf(fp, "ano_de_fabricacao.......: %i\n", aeronaves->ano_de_fabricacao);
-    fprintf(fp, "tipo.................: %c\n", aeronaves->tipo);
-    fprintf(fp, "numero_de_passageiros...: %i\n\n", aeronaves->numero_de_passageiros);
-    fprintf(fp, "situacao.......: %c\n", aeronaves->ano_de_fabricacao);
-    fprintf(fp, "piloto.................: %i\n", aeronaves->tripulacao.piloto);
-    fprintf(fp, "copiloto.................: %i\n", aeronaves->tripulacao.copiloto);
-    fprintf(fp, "comissaria.................: %i\n", aeronaves->tripulacao.comissaria);
-
-    
-
-    
+    fprintf(fp, "Identificacao: %s\n", aeronaves->indentificacao);
+    fprintf(fp, "Modelo: %s\n", aeronaves->modelo);
+    fprintf(fp, "Fabricante: %s\n", aeronaves->fabricante);
+    fprintf(fp, "Matricula: %s\n", aeronaves->matricula);
+    fprintf(fp, "Ano de fabricacao: %i\n", aeronaves->ano_de_fabricacao);
+    fprintf(fp, "Tipo: %c\n", aeronaves->tipo);
+    fprintf(fp, "Numero de passageiros: %i\n", aeronaves->numero_de_passageiros);
+    fprintf(fp, "Situacao: %c\n", aeronaves->situacao);
+    fprintf(fp, "Pilotos: %i\n", aeronaves->tripulacao.piloto);
+    fprintf(fp, "Copilotos: %i\n", aeronaves->tripulacao.copiloto);
+    fprintf(fp, "Comissarias: %i\n", aeronaves->tripulacao.comissaria);
+    fprintf(fp, "----------------------------------------\n");
 }
-void lista_por_fabricante(Aeronaves_t *lista){                  }
-void lista_por_modelo(Aeronaves_t *lista);
-void lista_por_ano(Aeronaves_t *lista);
-void lista_por_situacao(Aeronaves_t *lista);
+
+void lista_por_fabricante(struct Aeronaves *lista){
+    if(lista == NULL) {
+        printf("Nenhuma aeronave cadastrada.\n");
+        return;
+    }
+    
+    string fabricante;
+    printf("Digite o fabricante para buscar: ");
+    getchar();
+    fgets(fabricante, TAMANHO, stdin);
+    remover_enter(fabricante);
+    
+    int encontrou = 0;
+    struct Aeronaves *atual = lista;
+    while(atual != NULL) {
+        if(strcmp(atual->fabricante, fabricante) == 0) {
+            mostrar_dados_aeronaves(atual, stdout);
+            encontrou = 1;
+        }
+        atual = atual->prox;
+    }
+    
+    if(!encontrou) {
+        printf("Nenhuma aeronave encontrada com o fabricante %s.\n", fabricante);
+    }
+}
+
+void lista_por_modelo(struct Aeronaves *lista){
+    if(lista == NULL) {
+        printf("Nenhuma aeronave cadastrada.\n");
+        return;
+    }
+    
+    string modelo;
+    printf("Digite o modelo para buscar: ");
+    getchar();
+    fgets(modelo, TAMANHO, stdin);
+    remover_enter(modelo);
+    
+    int encontrou = 0;
+    struct Aeronaves *atual = lista;
+    while(atual != NULL) {
+        if(strcmp(atual->modelo, modelo) == 0) {
+            mostrar_dados_aeronaves(atual, stdout);
+            encontrou = 1;
+        }
+        atual = atual->prox;
+    }
+    
+    if(!encontrou) {
+        printf("Nenhuma aeronave encontrada com o modelo %s.\n", modelo);
+    }
+}
+
+void lista_por_ano(struct Aeronaves *lista){
+    if(lista == NULL) {
+        printf("Nenhuma aeronave cadastrada.\n");
+        return;
+    }
+    
+    int ano;
+    printf("Digite o ano para buscar: ");
+    scanf("%i", &ano);
+    getchar();
+    
+    int encontrou = 0;
+    struct Aeronaves *atual = lista;
+    while(atual != NULL) {
+        if(atual->ano_de_fabricacao == ano) {
+            mostrar_dados_aeronaves(atual, stdout);
+            encontrou = 1;
+        }
+        atual = atual->prox;
+    }
+    
+    if(!encontrou) {
+        printf("Nenhuma aeronave encontrada do ano %i.\n", ano);
+    }
+}
+
+void lista_por_situacao(struct Aeronaves *lista){
+    if(lista == NULL) {
+        printf("Nenhuma aeronave cadastrada.\n");
+        return;
+    }
+    
+    char situacao;
+    printf("Digite a situacao (o para operante, m para manutencao): ");
+    scanf("%c", &situacao);
+    getchar();
+    
+    int encontrou = 0;
+    struct Aeronaves *atual = lista;
+    while(atual != NULL) {
+        if(atual->situacao == situacao) {
+            mostrar_dados_aeronaves(atual, stdout);
+            encontrou = 1;
+        }
+        atual = atual->prox;
+    }
+    
+    if(!encontrou) {
+        printf("Nenhuma aeronave encontrada com a situacao %c.\n", situacao);
+    }
+}

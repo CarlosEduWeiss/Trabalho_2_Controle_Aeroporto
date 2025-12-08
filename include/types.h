@@ -10,8 +10,9 @@
 
 typedef char string[TAMANHO];
 
-typedef struct Aeronaves{
+struct Aeronaves{
 
+    int id;
     string indentificacao;
     string modelo;
     string fabricante;
@@ -30,21 +31,21 @@ typedef struct Aeronaves{
     struct Aeronaves *prox;
     
 
-}Aeronaves_t;
+};
 
 
-typedef struct Rotas{
+struct Rotas{
     int codigo;
 
     struct data{
-        unsigned dia;
-        unsigned mes;
-        unsigned ano;
+        unsigned int dia;
+        unsigned int mes;
+        unsigned int ano;
     }data;
 
     struct hora{
-        unsigned horas;
-        unsigned minutos;
+        unsigned int horas;
+        unsigned int minutos;
     }hora;
 
     string localDePartida;
@@ -52,7 +53,7 @@ typedef struct Rotas{
     float combustivel_necessario;
     int qtd_passageiros;
     int qtd_cargas;
-    int Aeronave_alocada;
+    string Aeronave_alocada;
     string nome_piloto;
     string nome_comissario;//
     string nome_copiloto;
@@ -60,19 +61,19 @@ typedef struct Rotas{
     struct Rotas *prox;
  
 
-}Rotas_t;
+};
 
 struct base_dados_aeronave {
     unsigned int contador;
-    Aeronaves_t *inicio;
-    Aeronaves_t *fim;
+    struct Aeronaves *inicio;
+    struct Aeronaves *fim;
 
 };
 
 struct bases_dados_rotas{
     unsigned int contador;
-    Rotas_t *inicio;
-    Rotas_t *fim; 
+    struct Rotas *inicio;
+    struct Rotas *fim; 
 };
 
 #endif
