@@ -16,7 +16,7 @@ void mostrar_dados_rotas(struct Rotas *rotas, FILE *fp){
     fprintf(fp, "Combustivel necessario: %.2f\n", rotas->combustivel_necessario);
     fprintf(fp, "Quantidade de passageiros: %i\n", rotas->qtd_passageiros);
     fprintf(fp, "Quantidade de cargas: %i\n", rotas->qtd_cargas);
-    fprintf(fp, "Aeronave alocada: %i\n", rotas->Aeronave_alocada);
+    fprintf(fp, "Aeronave alocada: %s\n", rotas->Aeronave_alocada);
     fprintf(fp, "Nome do piloto: %s\n", rotas->nome_piloto);
     fprintf(fp, "Nome do copiloto: %s\n", rotas->nome_copiloto);
     fprintf(fp, "Nome do comissario: %s\n", rotas->nome_comissario);
@@ -77,98 +77,75 @@ void lista_por_origem(struct Rotas *lista){
     }
 }
 
-// Função auxiliar para comparação de passageiros (crescente)
-int comparar_passageiros_crescente(const void *a, const void *b) {
-    struct Rotas *rota_a = *(struct Rotas**)a;
-    struct Rotas *rota_b = *(struct Rotas**)b;
-    return rota_a->qtd_passageiros - rota_b->qtd_passageiros;
-}
 
-// Função auxiliar para comparação de passageiros (decrescente)
-int comparar_passageiros_decrescente(const void *a, const void *b) {
-    struct Rotas *rota_a = *(struct Rotas**)a;
-    struct Rotas *rota_b = *(struct Rotas**)b;
-    return rota_b->qtd_passageiros - rota_a->qtd_passageiros;
-}
-
-void lista_Maior_passageiros(struct Rotas *lista){
-    if(lista == NULL) {
+void lista_Maior_passageiros(struct Rotas *lista) {
+    if (lista == NULL) {
         printf("Nenhuma rota cadastrada.\n");
         return;
     }
-    
-    // Contar quantas rotas existem
-    int count = 0;
-    struct Rotas *atual = lista;
-    while(atual != NULL) {
-        count++;
-        atual = atual->prox;
+
+    struct Rotas *i, *j;
+    struct Rotas temp_dados;
+    struct Rotas *temp_prox_i;
+    struct Rotas *temp_prox_j;
+
+    for (i = lista; i != NULL; i = i->prox) {
+        for (j = i->prox; j != NULL; j = j->prox) {
+            if (i->qtd_passageiros < j->qtd_passageiros) {
+                temp_dados = *i;
+                temp_prox_i = i->prox;
+                temp_prox_j = j->prox;
+
+                *i = *j;
+                i->prox = temp_prox_i;
+
+                *j = temp_dados;
+                j->prox = temp_prox_j;
+            }
+        }
     }
-    
-    // Criar array de ponteiros
-    struct Rotas **array = (struct Rotas**)malloc(count * sizeof(struct Rotas*));
-    if(array == NULL) {
-        printf("Erro ao alocar memoria.\n");
-        return;
-    }
-    
-    // Preencher array
-    atual = lista;
-    for(int i = 0; i < count; i++) {
-        array[i] = atual;
-        atual = atual->prox;
-    }
-    
-    // Ordenar por quantidade de passageiros (decrescente)
-    qsort(array, count, sizeof(struct Rotas*), comparar_passageiros_decrescente);
-    
-    // Mostrar resultados
+
     printf("Rotas ordenadas por quantidade decrescente de passageiros:\n");
-    for(int i = 0; i < count; i++) {
-        mostrar_dados_rotas(array[i], stdout);
+    struct Rotas *atual = lista;
+    while (atual != NULL) {
+        mostrar_dados_rotas(atual, stdout);
+        atual = atual->prox;
     }
-    
-    free(array);
 }
 
-void lista_Menor_passageiros(struct Rotas *lista){
-    if(lista == NULL) {
+void lista_Menor_passageiros(struct Rotas *lista) {
+    if (lista == NULL) {
         printf("Nenhuma rota cadastrada.\n");
         return;
     }
-    
-    // Contar quantas rotas existem
-    int count = 0;
-    struct Rotas *atual = lista;
-    while(atual != NULL) {
-        count++;
-        atual = atual->prox;
+
+    struct Rotas *i, *j;
+    struct Rotas temp_dados;
+    struct Rotas *temp_prox_i;
+    struct Rotas *temp_prox_j;
+
+    for (i = lista; i != NULL; i = i->prox) {
+        for (j = i->prox; j != NULL; j = j->prox) {
+            if (i->qtd_passageiros > j->qtd_passageiros) {
+                temp_dados = *i;
+                temp_prox_i = i->prox;
+                temp_prox_j = j->prox;
+
+                *i = *j;
+                i->prox = temp_prox_i;
+
+                *j = temp_dados;
+                j->prox = temp_prox_j;
+            }
+        }
     }
-    
-    // Criar array de ponteiros
-    struct Rotas **array = (struct Rotas**)malloc(count * sizeof(struct Rotas*));
-    if(array == NULL) {
-        printf("Erro ao alocar memoria.\n");
-        return;
-    }
-    
-    // Preencher array
-    atual = lista;
-    for(int i = 0; i < count; i++) {
-        array[i] = atual;
-        atual = atual->prox;
-    }
-    
-    // Ordenar por quantidade de passageiros (crescente)
-    qsort(array, count, sizeof(struct Rotas*), comparar_passageiros_crescente);
-    
-    // Mostrar resultados
+
     printf("Rotas ordenadas por quantidade crescente de passageiros:\n");
-    for(int i = 0; i < count; i++) {
-        mostrar_dados_rotas(array[i], stdout);
+    struct Rotas *atual = lista;
+    while (atual != NULL) {
+        mostrar_dados_rotas(atual, stdout);
+        atual = atual->prox;
     }
-    
-    free(array);
 }
 
 void listar_Rotas(struct Rotas *inicio_lista)

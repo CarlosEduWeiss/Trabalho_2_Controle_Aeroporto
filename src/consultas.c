@@ -56,5 +56,55 @@ void consultar_rotas_por_data(struct bases_dados_rotas *rotas){
     if(!encontrou) {
         printf("Nenhuma rota encontrada para a data %02u/%02u/%04u.\n", dia, mes, ano);
     }
+    
 }
+
+int consultar_se_aeronave_existe(struct base_dados_aeronave *aeronave_alocada, char *aeronave_pedida) {
+    
+    struct Aeronaves *atual = aeronave_alocada->inicio;
+    
+    while(atual != NULL) {
+        if(strcmp(atual->indentificacao, aeronave_pedida) == 0) {
+            return 1; // Encontrou
+        }
+        
+
+        atual = atual->prox; 
+    }
+    
+    return 0; 
+}
+int consultar_se_aeronave_esta_em_manutencao(struct base_dados_aeronave *aeronave_alocada, char *aeronave_pedida){
+    
+
+    if (aeronave_alocada == NULL || aeronave_alocada->inicio == NULL) {
+        return 0; 
+    }
+
+    struct Aeronaves *atual = aeronave_alocada->inicio;
+
+
+    while (atual != NULL) {
+        
+        if (strcmp(atual->indentificacao, aeronave_pedida) == 0) {
+            
+    
+            if (atual->situacao == 'm' || atual->situacao == 'M') {
+                return 1; 
+            } else {
+                return 0; 
+            }
+        }
+
+        atual = atual->prox;
+    }
+
+
+    return 0; 
+}
+
+
+
+
+
 

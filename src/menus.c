@@ -28,7 +28,7 @@ int menu_aeronaves(){
     printf("4 listagem por ano\n");
     printf("5 listagem por situacao\n");
     printf("6. listagem de todas as aeronaves\n");
-    printf("7 Salvar arquivo aeronave");
+    printf("7 Salvar arquivo aeronave\n");
     printf("0 para voltar\n");
     printf("::::");
     scanf("%i", &opc);
@@ -48,7 +48,8 @@ int menu_rotas(){
     printf("6 consumo de combustivel total em determinado intervalo\n");
     printf("7 listagem de rotas por quantidade crescente de passageiros\n");
     printf("8 listagem de rotas por quantidade decrescente de passageiros\n");
-    printf("9 Salvar arquivo rota\n");
+    printf("9 listar todas as rotas");
+    printf("10 Salvar arquivo rota\n");
     printf("0 para voltar\n");
     printf("::::");
     scanf("%i", &opc);

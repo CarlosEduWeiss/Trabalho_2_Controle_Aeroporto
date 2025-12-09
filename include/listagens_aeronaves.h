@@ -14,7 +14,7 @@ void mostrar_dados_aeronaves(struct Aeronaves *aeronaves, FILE *fp);
 void listar_Aeronaves(struct Aeronaves *inicio_lista);
 void lista_por_fabricante(struct Aeronaves *lista);
 void lista_por_modelo(struct Aeronaves *lista);
-void lista_por_ano(struct Aeronaves *lista);
+int lista_por_ano(struct Aeronaves *lista, int ano);
 void lista_por_situacao(struct Aeronaves *lista);
 
 #endif

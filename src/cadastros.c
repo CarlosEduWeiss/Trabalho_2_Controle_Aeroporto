@@ -1,5 +1,7 @@
 #include "../include/cadastros.h"
+#include "../include/listagens_aeronaves.h"
 #include "../include/utils.h"
+#include "../include/consultas.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <sys/types.h>
@@ -26,12 +28,11 @@ void inserir_aeronave_base_dados(struct base_dados_aeronave *aeronaves, struct A
         aeronaves->inicio = aeronave;
     } else {
         if(modo == 1){
-            // Inserir no início
             aeronave->prox = aeronaves->inicio;
             aeronaves->inicio = aeronave;
         }
         else if(modo == 2){
-            // Inserir no fim
+           
             aeronaves->fim->prox = aeronave;
             aeronaves->fim = aeronave;
         }
@@ -96,12 +97,50 @@ struct Aeronaves *nova_aeronave(unsigned int *codigo){
     getchar();
 
     printf("Digite (p) para aeronave do tipo passageiro ou (c) para aeronave de carga: ");
-    scanf("%c", &novo_aviao->tipo);
-    getchar();
-
+    scanf(" %c", &novo_aviao->tipo); 
+    getchar(); 
+    
+    int verificacao_tipo = 0; 
+    
+    do {
+        
+        if (novo_aviao->tipo == 'p' || novo_aviao->tipo == 'P' || 
+            novo_aviao->tipo == 'c' || novo_aviao->tipo == 'C') {
+            
+            verificacao_tipo = 1; 
+    
+        } else {
+            
+            printf("Opcao invalida! Digite apenas p ou c: ");
+            scanf(" %c", &novo_aviao->tipo);
+            getchar(); 
+            verificacao_tipo = 0; 
+        }
+    
+    } while (verificacao_tipo == 0); 
+    
     printf("Digite a situacao da aeronave, (o) para operante e (m) para manutencao: ");
     scanf("%c", &novo_aviao->situacao);
     getchar();
+
+    int verificacao_situacao = 0;
+
+    do {
+        
+        if (novo_aviao->situacao == 'O' || novo_aviao->situacao == 'o' || 
+            novo_aviao->situacao == 'M' || novo_aviao->situacao == 'm') {
+            
+            verificacao_situacao = 1; 
+    
+        } else {
+            
+            printf("Opcao invalida! Digite apenas p ou c: ");
+            scanf(" %c", &novo_aviao->situacao);
+            getchar(); 
+            verificacao_situacao = 0; 
+        }
+    
+    } while (verificacao_situacao == 0); 
 
     printf("Digite o numero de pilotos: ");
     scanf("%i", &novo_aviao->tripulacao.piloto);
@@ -120,8 +159,9 @@ struct Aeronaves *nova_aeronave(unsigned int *codigo){
     return novo_aviao;
 }
 
-struct Rotas *nova_rota(unsigned int *codigo){
+struct Rotas *nova_rota(unsigned int *codigo, struct base_dados_aeronave *db_aeronaves){
     struct Rotas *nova_rota = NULL;
+
 
     nova_rota = (struct Rotas*)malloc(sizeof(struct Rotas));
     if(nova_rota == NULL) return NULL;
@@ -150,7 +190,6 @@ struct Rotas *nova_rota(unsigned int *codigo){
     getchar();
 
     printf("Digite o local de partida: ");
-    getchar();
     fgets(nova_rota->localDePartida, TAMANHO, stdin);
     remover_enter(nova_rota->localDePartida);
 
@@ -171,8 +210,53 @@ struct Rotas *nova_rota(unsigned int *codigo){
     getchar();
 
     printf("Digite o codigo da aeronave alocada: ");
-    scanf("%i", &nova_rota->Aeronave_alocada);
-    getchar();
+    fgets(nova_rota->Aeronave_alocada, TAMANHO, stdin);
+    remover_enter(nova_rota->Aeronave_alocada);
+
+
+    int verificando_aeronave1, verificando_aeronave2; 
+    do {
+     
+        verificando_aeronave1 = consultar_se_aeronave_existe(db_aeronaves, nova_rota->Aeronave_alocada);
+    
+        if(verificando_aeronave1 == 0) {
+            printf("Aeronave nao encontrada\n"); 
+            
+            if(db_aeronaves->inicio == NULL) {
+                 printf("Nenhuma aeronave cadastrada. Cadastre uma aeronave antes de criar rotas.\n");
+                 free(nova_rota); 
+                 return NULL; 
+            } else {
+                 listar_Aeronaves(db_aeronaves->inicio);
+                 printf("Digite o codigo da aeronave alocada: ");
+                 fgets(nova_rota->Aeronave_alocada, TAMANHO, stdin);
+                 remover_enter(nova_rota->Aeronave_alocada);
+                 
+            }
+         
+        }
+    } while(verificando_aeronave1 == 0);
+
+    do {
+        verificando_aeronave2 = consultar_se_aeronave_esta_em_manutencao(db_aeronaves, nova_rota->Aeronave_alocada);
+    
+        if(verificando_aeronave2 == 0) {
+            printf("Aeronave nao encontrada\n"); 
+            
+            if(db_aeronaves->inicio == NULL) {
+                 printf("Nenhuma aeronave cadastrada. Cadastre uma aeronave antes de criar rotas.\n");
+                 free(nova_rota);
+                 return NULL; 
+            } else {
+                 listar_Aeronaves(db_aeronaves->inicio);
+                 printf("Digite o codigo da aeronave alocada QUE NAO ESTEJA EM MANUTENCAO: \n");
+                 fgets(nova_rota->Aeronave_alocada, TAMANHO, stdin);
+                 remover_enter(nova_rota->Aeronave_alocada);
+                 
+            }
+
+        }
+    } while(verificando_aeronave2 == 0);
 
     printf("Digite o nome do piloto: ");
     getchar();

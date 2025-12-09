@@ -24,7 +24,7 @@ int main()
     unsigned int dia, mes, ano;
     unsigned int dia_inicio, mes_inicio, ano_inicio;
     unsigned int dia_fim, mes_fim, ano_fim;
-    int codigo_aeronave;
+    string codigo_aeronave;
     float percentual;
     float consumo;
     struct Aeronaves *lista_aeronaves = NULL;
@@ -46,7 +46,7 @@ int main()
                 break;
                 
             case 2: // Cadastrar rota
-                inserir_rotas_base_dados(&rotas, nova_rota(&rotas.contador), 2);
+                inserir_rotas_base_dados(&rotas, nova_rota(&rotas.contador, &aeronaves), 2);
                 break;
                 
             case 3: // Consultar aeronaves
@@ -75,7 +75,16 @@ int main()
                             break;
                             
                         case 4: // Listagem por ano
-                            lista_por_ano(aeronaves.inicio);
+                            int ano;
+                            printf("Digite o ano para buscar: ");
+                            scanf("%i", &ano);
+                            getchar();
+                        
+                            int total = lista_por_ano(aeronaves.inicio, ano);
+                        
+                            if(total == 0) {
+                                printf("Nenhuma aeronave encontrada do ano %i.\n", ano);
+                            }
                             break;
                             
                         case 5: // Listagem por situacao
@@ -147,29 +156,37 @@ int main()
                             
                         case 4: // Percentual de voos para determinado destino em uma data
                             printf("Digite o destino: ");
-                            getchar();
                             fgets(destino, TAMANHO, stdin);
                             remover_enter(destino);
-                            printf("Digite o dia: ");
-                            scanf("%u", &dia);
+                            printf("Digite o dia inicial: ");
+                            scanf("%u", &dia_inicio);
                             getchar();
-                            printf("Digite o mes: ");
-                            scanf("%u", &mes);
+                            printf("Digite o mes inicial ");
+                            scanf("%u", &mes_inicio);
                             getchar();
-                            printf("Digite o ano: ");
-                            scanf("%u", &ano);
+                            printf("Digite o ano inicial: ");
+                            scanf("%u", &ano_inicio);
                             getchar();
-                            percentual = percentual_voos_destino_data(&rotas, destino, dia, mes, ano);
+                            printf("Digite o dia final: ");
+                            scanf("%u", &dia_fim);
+                            getchar();
+                            printf("Digite o mes final: ");
+                            scanf("%u", &mes_fim);
+                            getchar();
+                            printf("Digite o ano final: ");
+                            scanf("%u", &ano_fim);
+                            getchar();
+                            percentual = percentual_voos_destino_data(&rotas, destino, dia_inicio, mes_inicio, ano_inicio, dia_fim, mes_fim, ano_fim);
                             printf("Percentual de voos para %s na data %02u/%02u/%04u: %.2f%%\n", 
                                    destino, dia, mes, ano, percentual);
                             break;
                             
                         case 5: // Percentual de voos por aeronave
                             printf("Digite o codigo da aeronave: ");
-                            scanf("%s", &codigo_aeronave);
-                            getchar();
+                            fgets(codigo_aeronave, TAMANHO, stdin);
+                            remover_enter(codigo_aeronave);
                             percentual = percentual_voos_por_aeronave(&rotas, codigo_aeronave);
-                            printf("Percentual de voos da aeronave %i: %.2f%%\n", codigo_aeronave, percentual);
+                            printf("Percentual de voos da aeronave %s: %.2f%%\n", codigo_aeronave, percentual);
                             break;
                             
                         case 6: // Consumo de combustivel total em determinado intervalo
@@ -190,9 +207,13 @@ int main()
                         case 8: // Listagem de rotas por quantidade decrescente de passageiros
                             lista_Maior_passageiros(rotas.inicio);
                             break;
-                        case 9:listar_Rotas(rotas.inicio);
-                                break;
-
+                        case 9://Listagem de todas as rotas;
+                            if(rotas.inicio == NULL) {
+                                printf("Nenhuma rota cadastrada.\n");
+                            } else {
+                                listar_Rotas(rotas.inicio);
+                            }
+                        break;
                         case 10: 
                         do{ 
                             opcao_salvar_rota = sub_menu_tipo_relatorio();

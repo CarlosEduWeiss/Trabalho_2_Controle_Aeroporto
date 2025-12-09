@@ -12,7 +12,8 @@ void salvar_dados_aeronaves(struct Aeronaves *inicio){
 
     fp = fopen("Aeronaves.bin", "wb");
 
-    if(!fp){        printf("Erro ao tentar abrir aeronave.bin");
+    if(!fp){   
+        printf("Erro ao tentar abrir aeronave.bin");
         return;
     }
     while (inicio){
@@ -143,7 +144,7 @@ void exportar_dados_aeronaves_html(struct Aeronaves *aeronave, char *nome_arq){
         return;
     }
 
-    fprintf(fp, "<HTML> <HEAD> <TITLE> RELATORIO DE CLIENTES </TITLE> </HEAD> <BODY> \n");
+    fprintf(fp, "<HTML> <HEAD> <TITLE> RELATORIO DE AERONAVES </TITLE> </HEAD> <BODY> \n");
     fprintf(fp, "<TABLE border = '1'> <TR> <TH> indentificacao </TH> <TH> modelo </TH> <TH> fabricante </TH> <TH> matricula </TH><TH> ano_de_fabricacao </TH><TH> tipo </TH><TH> numero_de_passageiros </TH><TH> situacao </TH><TH> quantidade de piloto </TH><TH> quantidade de copiloto </TH> <TH> quantidade de comissaria </TH></TR>\n");
     while (aeronave) {
         fprintf(fp, "<TR> <TD> %s </TD> <TD> %s </TD><TD> %s </TD><TD> %s </TD><TD> %d </TD><TD> %c </TD> <TD>%d</TD> <TD>%c</TD>  <TD>%d</TD> <TD>%d</TD> <TD>%d</TD></TR> \n", aeronave->indentificacao, aeronave->modelo, aeronave->fabricante, aeronave->matricula, aeronave->ano_de_fabricacao, aeronave->tipo, aeronave->numero_de_passageiros, aeronave->situacao,
@@ -156,5 +157,25 @@ void exportar_dados_aeronaves_html(struct Aeronaves *aeronave, char *nome_arq){
     fclose(fp);
 }
 void exportar_dados_rotas_html(struct Rotas *rotas, char *nome_arq){
+    FILE *fp = NULL;
+
+    fp = fopen(nome_arq, "w");
+
+    if (!fp) {
+        printf("Erro ao tentar abrir arquivo %s\n", nome_arq);
+        return;
+    }
+
+    fprintf(fp, "<HTML> <HEAD> <TITLE> RELATORIO DE ROTAS </TITLE> </HEAD> <BODY> \n");
+    fprintf(fp, "<TABLE border = '1'> <TR> <TH> dia </TH> <TH> mes </TH> <TH> ano </TH> <TH> horas </TH><TH> minutos </TH><TH> Local de Partida </TH><TH> Local de Destino </TH><TH> combustivel necessario </TH><TH>  Quantidade de passageiros </TH><TH> quantidade de cargas (KG) </TH> <TH> Nome do piloto </TH><TH> Nome do comissario </TH><TH> Nome do copiloto </TH></TR>\n");
+    while (rotas) {
+        fprintf(fp, "<TR> <TD> %u </TD> <TD> %u </TD><TD> %u </TD><TD> %u </TD><TD> %u </TD><TD> %s </TD> <TD>%s</TD> <TD>%f</TD>  <TD>%d</TD> <TD>%d</TD> <TD>%s</TD><TD>%s</TD><TD>%s</TD><TD>%s</TD></TR> \n",rotas->data.dia, rotas->data.mes, rotas->data.ano, rotas->hora.horas, rotas->hora.minutos, rotas->localDePartida, rotas->localDeDestino, rotas->combustivel_necessario,
+            rotas->qtd_passageiros, rotas->qtd_cargas, rotas->Aeronave_alocada, rotas->nome_piloto, rotas->nome_copiloto );
+        rotas = rotas->prox;
+        printf("html criado com sucesso");
+    }
+    fprintf(fp, "</TABLE> </BODY> </HTML>\n");
+
+    fclose(fp);
     
 }

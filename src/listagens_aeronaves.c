@@ -83,31 +83,26 @@ void lista_por_modelo(struct Aeronaves *lista){
     }
 }
 
-void lista_por_ano(struct Aeronaves *lista){
-    if(lista == NULL) {
-        printf("Nenhuma aeronave cadastrada.\n");
-        return;
-    }
-    
-    int ano;
-    printf("Digite o ano para buscar: ");
-    scanf("%i", &ano);
-    getchar();
-    
-    int encontrou = 0;
-    struct Aeronaves *atual = lista;
-    while(atual != NULL) {
-        if(atual->ano_de_fabricacao == ano) {
-            mostrar_dados_aeronaves(atual, stdout);
-            encontrou = 1;
+//funcao recursiva
+int lista_por_ano(struct Aeronaves *lista, int ano)
+    {
+        
+        if(lista == NULL) {
+            return 0;
         }
-        atual = atual->prox;
-    }
     
-    if(!encontrou) {
-        printf("Nenhuma aeronave encontrada do ano %i.\n", ano);
+        int encontrou_neste = 0;
+    
+        
+        if(lista->ano_de_fabricacao == ano) {
+            mostrar_dados_aeronaves(lista, stdout);
+            encontrou_neste = 1;
+        }
+    
+    
+        return encontrou_neste + lista_por_ano(lista->prox, ano);
     }
-}
+
 
 void lista_por_situacao(struct Aeronaves *lista){
     if(lista == NULL) {
